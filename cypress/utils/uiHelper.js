@@ -2,9 +2,10 @@ const { SITE_URL } = require("./constants");
 
 /**
  * Performs login on SauceDemo using the specified credentials.
- * 
- * @param {string} username 
- * @param {string} password 
+ * Re-logs in from scratch each time — no session caching.
+ *
+ * @param {string} username
+ * @param {string} password
  */
 const login = (username = "standard_user", password = "secret_sauce") => {
   cy.visit(SITE_URL);
@@ -25,3 +26,4 @@ module.exports = {
   login,
   loginAndAddBackpack,
 };
+

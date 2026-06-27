@@ -1,5 +1,5 @@
-const { loginAndAddBackpack } = require("../../utils/uiHelper");
-const { CHECKOUT_STEP_ONE_URL, CHECKOUT_STEP_TWO_URL } = require("../../utils/constants");
+const { loginAndAddBackpack } = require("../../../utils/uiHelper");
+const { CHECKOUT_STEP_ONE_URL, CHECKOUT_STEP_TWO_URL } = require("../../../utils/constants");
 
 describe("Checkout Step One Tests", () => {
   beforeEach(() => {
@@ -23,9 +23,16 @@ describe("Checkout Step One Tests", () => {
     cy.get("input#postal-code").type("12345");
     cy.get("input#continue").click();
 
-    cy.get('[data-test="error"]').should(
-      "contain.text",
-      "Error: First Name is required"
-    );
+    cy.get('[data-test="error"]').should("contain.text", "Error: First Name is required");
+  });
+
+  it("Edge Case: Alphanumeric/special-character postal code is accepted (no strict validation)", () => {
+    cy.get("input#first-name").type("John");
+    cy.get("input#last-name").type("Doe");
+    // SauceDemo does not enforce numeric-only postal codes
+    cy.get("input#postal-code").type("A1B-2C3!");
+    cy.get("input#continue").click();
+
+    cy.url().should("eq", CHECKOUT_STEP_TWO_URL);
   });
 });

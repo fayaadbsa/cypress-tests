@@ -1,5 +1,9 @@
-const { loginAndAddBackpack } = require("../../utils/uiHelper");
-const { CHECKOUT_STEP_TWO_URL, INVENTORY_URL, CHECKOUT_COMPLETE_URL } = require("../../utils/constants");
+const { loginAndAddBackpack } = require("../../../utils/uiHelper");
+const {
+  CHECKOUT_STEP_TWO_URL,
+  INVENTORY_URL,
+  CHECKOUT_COMPLETE_URL,
+} = require("../../../utils/constants");
 
 describe("Checkout Step Two Tests", () => {
   beforeEach(() => {
@@ -16,7 +20,7 @@ describe("Checkout Step Two Tests", () => {
   it("Positive: Verify overview summary and click Finish redirects to complete page", () => {
     cy.get(".inventory_item_name").should("have.text", "Sauce Labs Backpack");
     cy.get(".summary_subtotal_label").should("contain.text", "29.99");
-    
+
     cy.get("button#finish").click();
     cy.url().should("eq", CHECKOUT_COMPLETE_URL);
   });
@@ -24,5 +28,23 @@ describe("Checkout Step Two Tests", () => {
   it("Negative: Click Cancel redirects back to inventory page", () => {
     cy.get("button#cancel").click();
     cy.url().should("eq", INVENTORY_URL);
+  });
+
+  it("Edge Case: Displayed tax matches ~8% of item subtotal", () => {
+    // Extract subtotal and tax values
+    cy.get(".summary_subtotal_label")
+      .invoke("text")
+      .then((subtotalText) => {
+        const subtotal = parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
+
+        cy.get(".summary_tax_label")
+          .invoke("text")
+          .then((taxText) => {
+            const displayedTax = parseFloat(taxText.replace(/[^0-9.]/g, ""));
+            const expectedTax = parseFloat((subtotal * 0.08).toFixed(2));
+
+            expect(displayedTax).to.be.closeTo(expectedTax, 0.01);
+          });
+      });
   });
 });
