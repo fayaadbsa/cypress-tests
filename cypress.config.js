@@ -10,6 +10,8 @@ module.exports = defineConfig({
     screenshotsFolder: "cypress/temp/screenshots",
     videosFolder: "cypress/temp/videos",
     downloadsFolder: "cypress/temp/downloads",
+    chromeWebSecurity: false,
   },
 });
+
 
