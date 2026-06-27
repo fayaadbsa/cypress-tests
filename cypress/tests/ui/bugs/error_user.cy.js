@@ -17,6 +17,12 @@ const { CHECKOUT_STEP_ONE_URL, CHECKOUT_STEP_TWO_URL } = require("../../../utils
 
 describe("Error User Bug Validation", () => {
   beforeEach(() => {
+    // error_user causes the SauceDemo app to throw a JS TypeError
+    // ("Cannot read properties of undefined, reading 'values'") on form submission.
+    // Suppress it so Cypress doesn't abort the test — we then assert the broken
+    // state ourselves (page stays on Step One instead of advancing).
+    cy.on("uncaught:exception", () => false);
+
     login("error_user", "secret_sauce");
     cy.url().should("include", "inventory.html");
 
