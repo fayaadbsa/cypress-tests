@@ -39,8 +39,9 @@ describe("Checkout Complete Page Tests", () => {
     cy.get("button#finish").click();
     cy.url().should("eq", CHECKOUT_COMPLETE_URL);
 
-    // Return to inventory. cart badge must be absent (cart is empty)
-    cy.visit(INVENTORY_URL);
+    // Use the back-to-products button instead of cy.visit() to avoid state loss
+    cy.get("button#back-to-products").click();
+    cy.url().should("eq", INVENTORY_URL);
     cy.get(".shopping_cart_badge").should("not.exist");
   });
 });

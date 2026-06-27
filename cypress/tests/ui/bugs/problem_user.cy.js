@@ -36,7 +36,7 @@ describe("Problem User Bug Validation", () => {
       const uniqueSrcs = new Set(srcs);
       expect(
         uniqueSrcs.size,
-        `All ${srcs.length} product images share the same broken placeholder src`
+        `All ${srcs.length} product images share the same broken placeholder src`,
       ).to.eq(srcs.length);
     });
   });

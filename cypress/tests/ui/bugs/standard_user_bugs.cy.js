@@ -12,12 +12,7 @@
  */
 
 const { login } = require("../../../utils/uiHelper");
-const {
-  CART_URL,
-  CHECKOUT_STEP_ONE_URL,
-  CHECKOUT_STEP_TWO_URL,
-  CHECKOUT_COMPLETE_URL,
-} = require("../../../utils/constants");
+const { CHECKOUT_STEP_ONE_URL } = require("../../../utils/constants");
 
 describe("Standard User Bug Validation", () => {
   beforeEach(() => {
@@ -28,16 +23,17 @@ describe("Standard User Bug Validation", () => {
   // ── Bug 1: Checkout Permitted with Empty Cart ─────────────────────────────
 
   it("Bug 1 [EXPECTED TO FAIL]: Checkout button should be disabled or blocked when the cart is empty", () => {
-    cy.visit(CART_URL);
+    // Navigate via cart icon to preserve React state
+    cy.get("a.shopping_cart_link").click();
     cy.get(".cart_item").should("have.length", 0);
 
     // Checkout button should NOT be clickable with an empty cart
     cy.get("button#checkout").should("be.disabled");
   });
 
-  it("Bug 1 [EXPECTED TO FAIL]: Navigating to Checkout Step One with an empty cart should redirect back to cart", () => {
-    // Attempt to go directly to step one with nothing in cart
-    cy.visit(CART_URL);
+  it("Bug 1 [EXPECTED TO FAIL]: Clicking Checkout with an empty cart should not proceed to Step One", () => {
+    // Navigate via cart icon to preserve React state
+    cy.get("a.shopping_cart_link").click();
     cy.get("button#checkout").click();
 
     // Should NOT proceed to step one — app should block this
